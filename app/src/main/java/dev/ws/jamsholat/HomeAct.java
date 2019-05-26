@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 
@@ -27,6 +28,8 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
 
     EditText et_lokasi;
     ImageView iv_get_location;
+    Button btn_cari;
+
     double lat;
     double lon;
     String namaKota;
@@ -43,12 +46,14 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
 
         et_lokasi = findViewById(R.id.et_lokasi);
         iv_get_location = findViewById(R.id.iv_get_location);
+        btn_cari = findViewById(R.id.btn_cari);
+        iv_get_location.setOnClickListener(this);
+        btn_cari.setOnClickListener(this);
         ic_location_enable = getDrawable(R.drawable.ic_location);
         ic_location_disable = getDrawable(R.drawable.ic_location_disable);
 
         checkLocationPermission();
 
-        iv_get_location.setOnClickListener(this);
     }
 
     private void checkLocationPermission() {
@@ -65,15 +70,31 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
         if (l != null){
             lat = l.getLatitude();
             lon = l.getLongitude();
-            alamat = getAlamat(lat,lon);
             namaNegara = getCountyName(lat,lon);
             namaKota = getCityName(lat,lon);
             namaKota = namaKota.replace("Kota ","");
             Log.d("HomeAct","My Lat : "+lat+" My Lon : "+lon);
-            Log.d("HomeAct","MyCity : "+namaKota+" "+"MyCountry : "+namaNegara+" "+"Alamat Kamu "+alamat);
             et_lokasi.setText(namaKota+" , "+namaNegara);
 
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.iv_get_location:
+                getCurrentLocation();
+                break;
+            case R.id.btn_cari:
+
+                break;
+        }
+    }
+
+    private void cariJadwal(){
+        btn_cari.setText("Loading...");
+        btn_cari.setEnabled(false);
+
     }
 
     private String getCityName(double lat, double lon) {
@@ -102,27 +123,6 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
 
     }
 
-    private String getAlamat(double lat, double lon) {
-        String alamat = "";
-        Geocoder geocoder = new Geocoder(HomeAct.this, Locale.getDefault());
-        try {
-            List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
-            alamat = addresses.get(0).getThoroughfare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return alamat;
-
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.iv_get_location:
-                getCurrentLocation();
-                break;
-        }
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
