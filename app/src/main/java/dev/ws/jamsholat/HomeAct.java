@@ -1,6 +1,7 @@
 package dev.ws.jamsholat;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.location.Address;
@@ -21,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import dev.ws.jamsholat.Main.MainAct;
 import dev.ws.jamsholat.Model.GPSTracker;
 
 public class HomeAct extends AppCompatActivity implements View.OnClickListener {
@@ -86,7 +88,7 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
                 getCurrentLocation();
                 break;
             case R.id.btn_cari:
-
+                cariJadwal();
                 break;
         }
     }
@@ -94,6 +96,9 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
     private void cariJadwal(){
         btn_cari.setText("Loading...");
         btn_cari.setEnabled(false);
+        Intent intent = new Intent(this, MainAct.class);
+        startActivity(intent);
+        finish();
 
     }
 
