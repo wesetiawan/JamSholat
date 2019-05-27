@@ -7,6 +7,8 @@
     <color name="blue_primary">#24B9FA</color>
     <color name="blue_secondary">#79CEF3</color>
     <color name="white_primary">#fff</color>
+    <color name="white_secondary">#f0f0f0</color>
+    <color name="black_primary">#2E2E2E</color>
 
     <color name="colorHint">#4D7B7B7B</color>
 

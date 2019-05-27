@@ -19,8 +19,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import dev.ws.jamsholat.Main.MainAct;
 import dev.ws.jamsholat.Model.GPSTracker;
@@ -66,24 +69,23 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    private void getCurrentLocation(){
+    private void getCurrentLocation() {
         GPSTracker gpsTracker = new GPSTracker(HomeAct.this);
         Location l = gpsTracker.getLocation();
-        if (l != null){
+        if (l != null) {
             lat = l.getLatitude();
             lon = l.getLongitude();
-            namaNegara = getCountyName(lat,lon);
-            namaKota = getCityName(lat,lon);
-            namaKota = namaKota.replace("Kota ","");
-            Log.d("HomeAct","My Lat : "+lat+" My Lon : "+lon);
-            et_lokasi.setText(namaKota+" , "+namaNegara);
+            namaNegara = getCountyName(lat, lon);
+            namaKota = getCityName(lat, lon);
+            Log.d("HomeAct", "My Lat : " + lat + " My Lon : " + lon);
+            et_lokasi.setText(namaKota + " , " + namaNegara);
 
         }
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.iv_get_location:
                 getCurrentLocation();
                 break;
@@ -93,10 +95,12 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
         }
     }
 
-    private void cariJadwal(){
+    private void cariJadwal() {
         btn_cari.setText("Loading...");
         btn_cari.setEnabled(false);
         Intent intent = new Intent(this, MainAct.class);
+        intent.putExtra("namaKota", namaKota);
+        intent.putExtra("namaNegara", namaNegara);
         startActivity(intent);
         finish();
 
@@ -129,10 +133,12 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
     }
 
 
+
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == LOCATION_PERMISSION_CODE){
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == LOCATION_PERMISSION_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 checkLocationPermission();
             }
         }
