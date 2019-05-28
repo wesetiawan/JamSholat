@@ -4,33 +4,39 @@ import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.LinearLayoutCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.neovisionaries.i18n.CountryCode;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import dev.ws.jamsholat.R;
 
-public class MainAct extends AppCompatActivity {
+public class MainAct extends AppCompatActivity implements View.OnClickListener {
     private Fragment selectedFragment;
     private String namaKota = "";
     private String namaNegara = "";
-    private long sisaWaktu;
+    private String show = "";
+    private String tanggal_hari_ini = "";
     private Locale locale;
+    private DateFormat dateFormat;
+    private long sisaWaktu;
+    private Calendar calendar, currentTime, calendarDay;
+    int day;
 
-    TextView tv_location,tv_tanggal_dan_hari,tv_timmer;
+    TextView tv_lokasi, tv_tanggal_dan_hari, tv_jam_menit, tv_detik, tv_waktu_sholat, tv_pembatas;
+    LinearLayoutCompat ll_jam_holder;
+    ImageView iv_kurangi_hari, iv_tambah_hari;
 
 
     @Override
@@ -40,24 +46,35 @@ public class MainAct extends AppCompatActivity {
         Bundle bundle = getIntent().getExtras();
         namaKota = bundle.getString("namaKota");
         namaNegara = bundle.getString("namaNegara");
+        show = "timer";
+        getTanggalSekarang();
+        day = 0;
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        tv_location = findViewById(R.id.tv_location);
+        BottomNavigationView bottom_nav = findViewById(R.id.bottom_nav);
+        tv_lokasi = findViewById(R.id.tv_lokasi);
         tv_tanggal_dan_hari = findViewById(R.id.tv_tanggal_dan_hari);
-        tv_timmer = findViewById(R.id.tv_timmer);
+        tv_detik = findViewById(R.id.tv_detik);
+        tv_jam_menit = findViewById(R.id.tv_jam_menit);
+        tv_waktu_sholat = findViewById(R.id.tv_waktu_sholat);
+        ll_jam_holder = findViewById(R.id.ll_jam_holder);
+        tv_pembatas = findViewById(R.id.tv_pembatas);
+        iv_kurangi_hari = findViewById(R.id.iv_kurangi_hari);
+        iv_tambah_hari = findViewById(R.id.iv_tambah_hari);
 
-        tv_location.setText(namaKota+", "+namaNegara);
-        tv_tanggal_dan_hari.setText(getDateSekarang());
-        createCountDownTimer(4,21);
+        ll_jam_holder.setOnClickListener(this);
+        tv_jam_menit.setOnClickListener(this);
+        tv_detik.setOnClickListener(this);
+        tv_pembatas.setOnClickListener(this);
+        iv_tambah_hari.setOnClickListener(this);
+        iv_kurangi_hari.setOnClickListener(this);
 
-        MainFrag mainFrag = new MainFrag();
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fl_container,mainFrag);
-        fragmentTransaction.commit();
 
-        tv_timmer.setText(updateTimer());
+        bottom_nav.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        navView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        setTv_lokasi();
+        tv_tanggal_dan_hari.setText(tanggal_hari_ini);
+        createCountDown(23, 36);
+
     }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -79,30 +96,52 @@ public class MainAct extends AppCompatActivity {
                     selectedFragment = historyFrag;
                     break;
             }
-            getSupportFragmentManager().beginTransaction().replace(R.id.fl_container,selectedFragment).commit();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fl_container, selectedFragment).commit();
             return true;
         }
     };
 
+    private void tambahkurangHari() {
+        calendarDay = Calendar.getInstance(locale);
+        if (day == 0) {
+            getTanggalSekarang();
+            tanggal_hari_ini = dateFormat.format(calendarDay.getTime());
+        }else {
+            calendarDay.add(Calendar.DAY_OF_YEAR, day);
+            tanggal_hari_ini = dateFormat.format(calendarDay.getTime());
+        }
 
-    private String getDateSekarang(){
-        String countryCode = CountryCode.findByName(namaNegara).get(0).name();
-        locale = new Locale(countryCode);
-        Calendar calendar = Calendar.getInstance(locale);
-        DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.FULL,locale);
-        return dateFormat.format(calendar.getTime());
+        tv_tanggal_dan_hari.setText(tanggal_hari_ini);
     }
 
-    private void createCountDownTimer(int jam,int menit){
-        Calendar targetTime = Calendar.getInstance();
-        targetTime.set(Calendar.HOUR_OF_DAY,jam);
-        targetTime.set(Calendar.MINUTE,menit);
-        new CountDownTimer(targetTime.getTimeInMillis()-System.currentTimeMillis(),1000) {
+
+    private void getTanggalSekarang() {
+        String countryCode = CountryCode.findByName(namaNegara).get(0).name();
+        Locale new_Locale = new Locale(countryCode);
+        DateFormat new_dateFormat = DateFormat.getDateInstance(DateFormat.FULL, new_Locale);
+        Calendar new_calendar = Calendar.getInstance(new_Locale);
+        dateFormat = new_dateFormat;
+        locale = new_Locale;
+        currentTime = new_calendar;
+        calendar = new_calendar;
+        tanggal_hari_ini = new_dateFormat.format(new_calendar.getTime());
+    }
+
+    private void createCountDown(int jam, int menit) {
+        calendar.set(Calendar.HOUR_OF_DAY, jam);
+        calendar.set(Calendar.MINUTE, menit);
+        long waktu = calendar.getTimeInMillis() - System.currentTimeMillis();
+        Log.d("MainAc", "CountdownTimmer Sebelum jalan: " + waktu);
+        new CountDownTimer(waktu, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
+                Log.d("MainAc", "CountdownTimmer Running: " + millisUntilFinished);
                 sisaWaktu = millisUntilFinished;
-                Log.d("MainAc","CountdownTimmer Running: "+sisaWaktu);
-                updateTimer();
+                if (show.equals("timer")) {
+                    getCurrentTimeCountDown();
+                } else {
+                    getCurrentTime();
+                }
             }
 
             @Override
@@ -110,13 +149,67 @@ public class MainAct extends AppCompatActivity {
 
             }
         }.start();
+    }
+
+    private void getCurrentTime() {
+        currentTime = Calendar.getInstance(locale);
+        currentTime.getTime();
+        long jam = currentTime.get(Calendar.HOUR_OF_DAY);
+        long menit = currentTime.get(Calendar.MINUTE);
+        long detik = currentTime.get(Calendar.SECOND);
+        tv_jam_menit.setText(String.format(locale, "%01d:%02d", jam, menit));
+        tv_detik.setText(String.format(locale, "%01d", detik));
+    }
+
+    private void getCurrentTimeCountDown() {
+        int jam = (int) (sisaWaktu / (1000 * 60 * 60)) % 24;
+        int menit = (int) (sisaWaktu / (1000 * 60)) % 60;
+        int detik = (int) (sisaWaktu / 1000) % 60;
+        tv_jam_menit.setText("-" + String.format(locale, "%01d:%02d", jam, menit));
+        tv_detik.setText(String.format(locale, "%01d", detik));
 
     }
 
-    private String updateTimer() {
-        int menit = (int) (sisaWaktu / 1000)/ 60;
-        int jam = (int) (sisaWaktu / 1000)/ 360;
-
-        return String.format(Locale.getDefault(),"%02d:%02d",jam,menit);
+    private void setTv_lokasi() {
+        if (namaKota == null) {
+            namaKota = "";
+        } else if (namaKota.contains("Kota")) {
+            Log.d("MainAct", "Found Kota from NamaNegara");
+            namaKota = namaKota.replace("Kota", "");
+        }
+        if (namaNegara == null) {
+            namaNegara = "";
+        }
+        tv_lokasi.setText(namaKota + ", " + namaNegara);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ll_jam_holder:
+            case R.id.tv_jam_menit:
+            case R.id.tv_detik:
+                if (show.equals("timer")) {
+                    show = "clock";
+                    getCurrentTime();
+                } else {
+                    getCurrentTimeCountDown();
+                    show = "timer";
+                }
+                break;
+            case R.id.iv_tambah_hari:
+                day = day+1;
+                Log.d("MainAct","Tambah hari, day:"+day);
+                tambahkurangHari();
+                break;
+            case R.id.iv_kurangi_hari:
+                day = day-1;
+                Log.d("MainAct","Kurangi hari, day:"+day);
+                tambahkurangHari();
+                break;
+
+        }
+    }
+
+
 }

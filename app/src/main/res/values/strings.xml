@@ -11,4 +11,5 @@
     <string name="history">History</string>
     <string name="subuh_fajr">Subuh(Fajr)</string>
     <string name="am">AM</string>
+    <string name="pm">PM</string>
 </resources>
