@@ -73,7 +73,7 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
 
         setTv_lokasi();
         tv_tanggal_dan_hari.setText(tanggal_hari_ini);
-        createCountDown(23, 36);
+        createCountDown(4, 14);
 
     }
 
