@@ -9,7 +9,13 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="cari">Cari</string>
     <string name="history">History</string>
-    <string name="subuh_fajr">Subuh(Fajr)</string>
-    <string name="am">AM</string>
-    <string name="pm">PM</string>
+
+    <!-- TODO: Convert nama waktu sholat -->
+    <string name="Fajr">Subuh(Fajr)</string>
+    <string name="Dhuhr">Dzuhur</string>
+    <string name="Asr">Ashar</string>
+    <string name="Maghrib">Maghrib</string>
+    <string name="Isha">Isya\'</string>
+    <string name="Imsak">Imsyak</string>
+
 </resources>

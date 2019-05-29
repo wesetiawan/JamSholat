@@ -10,9 +10,6 @@ public class Timings {
     @SerializedName("Fajr")
     @Expose
     private String fajr;
-    @SerializedName("Sunrise")
-    @Expose
-    private String sunrise;
     @SerializedName("Dhuhr")
     @Expose
     private String dhuhr;
@@ -35,14 +32,6 @@ public class Timings {
 
     public void setFajr(String fajr) {
         this.fajr = fajr;
-    }
-
-    public String getSunrise() {
-        return sunrise;
-    }
-
-    public void setSunrise(String sunrise) {
-        this.sunrise = sunrise;
     }
 
     public String getDhuhr() {

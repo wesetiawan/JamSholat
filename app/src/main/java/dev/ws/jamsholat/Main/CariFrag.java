@@ -15,10 +15,12 @@ import dev.ws.jamsholat.R;
  * A simple {@link Fragment} subclass.
  */
 public class CariFrag extends Fragment {
+    private View view;
+    static private CariFrag cariFrag;
 
-
-    public CariFrag() {
-        // Required empty public constructor
+    public static CariFrag newInstance(){
+        cariFrag = new CariFrag();
+        return cariFrag;
     }
 
 
@@ -26,7 +28,11 @@ public class CariFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cari, container, false);
+        view = inflater.inflate(R.layout.fragment_cari, container, false);
+
+
+
+        return view;
     }
 
 }

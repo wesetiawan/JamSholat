@@ -43,7 +43,6 @@
                 android:layout_weight="0.8"
                 android:fontFamily="@font/arconrounded"
                 android:gravity="center"
-                android:text="Umbulharjo, Yogyakarta"
                 android:textColor="@color/white_primary"
                 android:textSize="20sp" />
 
@@ -57,90 +56,91 @@
         </LinearLayout>
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:background="@drawable/bg_title_fragment"
             android:id="@+id/ll_title_holder"
             android:layout_width="match_parent"
             android:layout_height="165dp"
-            app:layout_constraintTop_toBottomOf="@id/ll_top_nav"
-            app:layout_constraintStart_toStartOf="parent"
+            android:background="@drawable/bg_title_fragment"
+            android:orientation="vertical"
             app:layout_constraintEnd_toEndOf="parent"
-            android:orientation="vertical">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_top_nav">
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:id="@+id/ll_jam_holder"
-                android:weightSum="1"
-                android:gravity="center_horizontal"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:layout_marginTop="10dp">
-                
+                android:layout_marginTop="10dp"
+                android:gravity="center_horizontal"
+                android:weightSum="1">
+
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_jam_menit"
-                    android:gravity="right"
-                    android:layout_weight="0.5"
-                    android:padding="2dp"
-                    android:textColor="@color/white_primary"
-                    android:fontFamily="@font/arconrounded"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="60sp"
-                    android:text="24:08"/>
+                    android:layout_weight="0.5"
+                    android:fontFamily="@font/arconrounded"
+                    android:gravity="right"
+                    android:padding="2dp"
+                    android:text="00:00"
+                    android:textColor="@color/white_primary"
+                    android:textSize="60sp" />
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_pembatas"
-                    android:gravity="center"
-                    android:padding="2dp"
-                    android:textColor="@color/white_primary"
-                    android:fontFamily="@font/arconrounded"
                     android:layout_width="20dp"
                     android:layout_height="wrap_content"
-                    android:textSize="60sp"
-                    android:text=":"/>
-                
+                    android:fontFamily="@font/arconrounded"
+                    android:gravity="center"
+                    android:padding="2dp"
+                    android:text=":"
+                    android:textColor="@color/white_primary"
+                    android:textSize="60sp" />
+
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/tv_detik"
-                    android:gravity="left"
-                    android:layout_weight="0.2"
-                    android:padding="2dp"
-                    android:textColor="@color/white_primary"
-                    android:fontFamily="@font/arconrounded"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:textSize="40sp"
-                    android:text="57"/>
-                
+                    android:layout_weight="0.2"
+                    android:fontFamily="@font/arconrounded"
+                    android:gravity="left"
+                    android:padding="2dp"
+                    android:text="00"
+                    android:textColor="@color/white_primary"
+                    android:textSize="40sp" />
+
             </androidx.appcompat.widget.LinearLayoutCompat>
+
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_waktu_sholat"
-                android:textColor="@color/white_primary"
-                android:fontFamily="@font/arconregular"
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="26sp"
-                android:text="Isha"/>
-            
+                android:layout_gravity="center"
+                android:fontFamily="@font/arconregular"
+                android:text="@string/Dhuhr"
+                android:textColor="@color/white_primary"
+                android:textSize="26sp" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:padding="10dp"
-            android:background="@color/white_secondary"
             android:id="@+id/ll_tanggal_holder"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            app:layout_constraintTop_toBottomOf="@id/ll_title_holder"
+            android:background="@color/white_secondary"
+            android:padding="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/ll_title_holder">
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_marginStart="18dp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:src="@drawable/ic_arrow_kiri"
                 android:id="@+id/iv_kurangi_hari"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="18dp"
+                android:src="@drawable/ic_arrow_kiri"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_tanggal_dan_hari"
@@ -158,25 +158,54 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.appcompat.widget.AppCompatImageView
-                android:layout_marginEnd="18dp"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:src="@drawable/ic_arrow_kanan"
                 android:id="@+id/iv_tambah_hari"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="18dp"
+                android:src="@drawable/ic_arrow_kanan"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btn_getdata"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_example"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="11dp"
+                android:scrollbars="vertical"
+                android:text="DATA HERE : \n" />
+        </RelativeLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_getdata"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="get data"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_tanggal_holder" />
 
         <FrameLayout
             android:id="@+id/fl_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@id/ll_tanggal_holder"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ll_tanggal_holder">
 
-            >
         </FrameLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -184,9 +213,9 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav"
-        android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="0dp"
         android:layout_marginEnd="0dp"
         android:background="?android:attr/windowBackground"

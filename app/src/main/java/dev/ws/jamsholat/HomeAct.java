@@ -13,17 +13,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
 
 import dev.ws.jamsholat.Main.MainAct;
 import dev.ws.jamsholat.Model.GPSTracker;
@@ -39,7 +37,10 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
     double lon;
     String namaKota;
     String namaNegara;
-    String alamat;
+    String valLat;
+    String valLon;
+    String strBulan;
+    String strTahun;
 
 
     Drawable ic_location_disable, ic_location_enable;
@@ -79,7 +80,10 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
             namaKota = getCityName(lat, lon);
             Log.d("HomeAct", "My Lat : " + lat + " My Lon : " + lon);
             et_lokasi.setText(namaKota + " , " + namaNegara);
-
+            valLat = Double.toString(lat);
+            Log.d("HomeAct", "valLat: " + valLat);
+            valLon = Double.toString(lon);
+            Log.d("HomeAct", "valLat: " + valLat);
         }
     }
 
@@ -99,11 +103,32 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
         btn_cari.setText("Loading...");
         btn_cari.setEnabled(false);
         Intent intent = new Intent(this, MainAct.class);
-        intent.putExtra("namaKota", namaKota);
-        intent.putExtra("namaNegara", namaNegara);
-        startActivity(intent);
-        finish();
+        if (namaKota != null && namaNegara != null && valLat != null && valLon != null){
+            intent.putExtra("namaKota", namaKota);
+            intent.putExtra("namaNegara", namaNegara);
+            intent.putExtra("valLat", valLat);
+            intent.putExtra("valLon", valLon);
+            startActivity(intent);
+            finish();
+        }else {
+            if (namaKota == null){
+                errorSendData("Maaf gagal Mendapatkan Nama Kota");
+            }else if (namaNegara == null){
+                errorSendData("Maaf gagal Mendapatkan Nama Negara");
+            }else if (valLon == null){
+                errorSendData("Maaf gagal mendapatkan valLon");
+            }else if (valLat == null){
+                errorSendData("Maaf gagal mendapatkan valLat");
+            }
+        }
 
+
+    }
+
+    private void errorSendData(String s){
+        Toast.makeText(getApplicationContext(),s,Toast.LENGTH_SHORT);
+        btn_cari.setText("CARI");
+        btn_cari.setEnabled(true);
     }
 
     private String getCityName(double lat, double lon) {
@@ -131,6 +156,25 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
         return namaNegara;
 
     }
+
+    /*private void ambilJamSholat(){
+        if (valLat != null && valLon != null ){
+            ApiService apiService = ApiClient.getClient().create(ApiService.class);
+            Call<Data> call = apiService.getJadwal(valLat,valLon,strBulan,strTahun);
+            call.enqueue(new Callback<Data>() {
+                @Override
+                public void onResponse(Call<Data> call, Response<Data> response) {
+                    Log.d("Data ", " respon" + response.body().getDate());
+                }
+
+                @Override
+                public void onFailure(Call<Data> call, Throwable t) {
+
+                }
+            });
+        }
+
+    }*/
 
 
 

@@ -15,10 +15,12 @@ import dev.ws.jamsholat.R;
  * A simple {@link Fragment} subclass.
  */
 public class HistoryFrag extends Fragment {
+    private View view;
+    static private HistoryFrag historyFrag;
 
-
-    public HistoryFrag() {
-        // Required empty public constructor
+    public static HistoryFrag newInstance(){
+        historyFrag = new HistoryFrag();
+        return historyFrag;
     }
 
 
@@ -26,7 +28,10 @@ public class HistoryFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_history, container, false);
+        view = inflater.inflate(R.layout.fragment_history, container, false);
+
+
+        return view;
     }
 
 }

@@ -16,10 +16,13 @@ import dev.ws.jamsholat.R;
  * A simple {@link Fragment} subclass.
  */
 public class MainFrag extends Fragment {
+    private View view;
+    static private MainFrag mainFrag;
 
 
-    public MainFrag() {
-        // Required empty public constructor
+    public static MainFrag newInstance(){
+        mainFrag = new MainFrag();
+        return mainFrag;
     }
 
 
@@ -27,7 +30,10 @@ public class MainFrag extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
+
+
+        return view;
     }
 
 }

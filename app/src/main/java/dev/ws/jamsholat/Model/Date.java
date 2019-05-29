@@ -10,10 +10,9 @@ public class Date {
     @SerializedName("readable")
     @Expose
     private String readable;
-    @SerializedName("hijri")
+    @SerializedName("timestamp")
     @Expose
-    private Hijri hijri;
-
+    private String timestamp;
     public String getReadable() {
         return readable;
     }
@@ -22,13 +21,12 @@ public class Date {
         this.readable = readable;
     }
 
-
-    public Hijri getHijri() {
-        return hijri;
+    public String getTimestamp() {
+        return timestamp;
     }
 
-    public void setHijri(Hijri hijri) {
-        this.hijri = hijri;
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 
 }
