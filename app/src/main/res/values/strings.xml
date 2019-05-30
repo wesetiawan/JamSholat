@@ -17,5 +17,7 @@
     <string name="Maghrib">Maghrib</string>
     <string name="Isha">Isya\'</string>
     <string name="Imsak">Imsyak</string>
+    <string name="am">AM</string>
+    <string name="pm">PM</string>
 
 </resources>

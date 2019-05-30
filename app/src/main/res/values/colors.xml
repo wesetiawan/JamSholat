@@ -11,5 +11,9 @@
     <color name="black_primary">#2E2E2E</color>
 
     <color name="colorHint">#4D7B7B7B</color>
+    <color name="listSpace">#9C9C9C</color>
+
+    <color name="selectedBg">#5BB6B6B6</color>
+    <color name="selectedText">#494949</color>
 
 </resources>

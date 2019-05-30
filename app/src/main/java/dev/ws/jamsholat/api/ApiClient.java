@@ -7,7 +7,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  * Created by Wawan on 5/27/2019
  */
 public class ApiClient {
-    public static final String BASE_URL =  "http://api.aladhan.com/v1/timings/:date_or_timestamp";
+    public static final String BASE_URL =  "https://muslimsalat.com/";
 
     public static Retrofit retrofit = null;
 

@@ -1,15 +1,15 @@
 package dev.ws.jamsholat.api;
 
-import dev.ws.jamsholat.Model.Data;
+import dev.ws.jamsholat.Model.JadwalSholat;
 import retrofit2.Call;
 import retrofit2.http.GET;
-import retrofit2.http.Query;
+import retrofit2.http.Path;
 
 /**
  * Created by Wawan on 5/27/2019
  */
 public interface ApiService {
-    /*@GET("?latitude={lat}&longitude={lon}&method=8&month={bulan}&year={tahun}")*/
-    Call<Data> getJadwal(@Query("date_or_timestamp") String date_or_timestamp,@Query("latitude") String latitude, @Query("longitude") String longitude,@Query("method") int method);
+    @GET("{periode}/daily.json?key=ac045fde4c38654fee34b9bb78a5afd6")
+    Call<JadwalSholat> getJadwalSholat(@Path("periode") String periode);
 
 }

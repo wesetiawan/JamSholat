@@ -6,7 +6,6 @@ import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,28 +21,17 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.neovisionaries.i18n.CountryCode;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.sql.Time;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
-import dev.ws.jamsholat.Model.Data;
 import dev.ws.jamsholat.R;
-import dev.ws.jamsholat.api.ApiClient;
-import dev.ws.jamsholat.api.ApiService;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainAct extends AppCompatActivity implements View.OnClickListener {
     public static TextView tv_example;
@@ -59,18 +47,20 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
     int day;
     private BottomNavigationView bottom_nav;
     private RequestQueue requestQueue;
+    private String url;
 
-    String data = "";
     String valLat;
     String valLon;
-    int valBulan;
-    int valTahun;
-    String valDate_or_timestamp;
+    int jam;
+    int menit;
+    int detik;
+    int nextJam;
+    int nextMenit;
+    long valDate_or_timestamp;
 
     TextView tv_lokasi, tv_tanggal_dan_hari, tv_jam_menit, tv_detik, tv_waktu_sholat, tv_pembatas;
     LinearLayoutCompat ll_jam_holder;
-    ImageView iv_kurangi_hari, iv_tambah_hari;
-    Button btn_getdata;
+    ImageView iv_kurangi_hari, iv_tambah_hari, btn_back, btn_more;
 
 
     @Override
@@ -80,6 +70,7 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
         Bundle bundle = getIntent().getExtras();
         requestQueue = Volley.newRequestQueue(this);
         namaKota = bundle.getString("namaKota");
+        namaKota = namaKota.substring(namaKota.lastIndexOf(" ")+1);
         namaNegara = bundle.getString("namaNegara");
         valLat = bundle.getString("valLat");
         Log.d("MainAct", "valLat: " + valLat);
@@ -100,19 +91,10 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
         iv_kurangi_hari = findViewById(R.id.iv_kurangi_hari);
         iv_tambah_hari = findViewById(R.id.iv_tambah_hari);
         bottom_nav = findViewById(R.id.bottom_nav);
-        tv_example = findViewById(R.id.tv_example);
-        btn_getdata = findViewById(R.id.btn_getdata);
+        btn_back = findViewById(R.id.btn_back);
+        btn_more = findViewById(R.id.btn_more);
 
         tv_example.setMovementMethod(new ScrollingMovementMethod());
-
-        btn_getdata.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                jsonParse();
-            }
-        });
-
-
 
         ll_jam_holder.setOnClickListener(this);
         tv_jam_menit.setOnClickListener(this);
@@ -120,47 +102,87 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
         tv_pembatas.setOnClickListener(this);
         iv_tambah_hari.setOnClickListener(this);
         iv_kurangi_hari.setOnClickListener(this);
+        btn_back.setOnClickListener(this);
 
         setTv_lokasi();
         tv_tanggal_dan_hari.setText(tanggal_hari_ini);
-        createCountDown(11, 36);
+        getCurrentTime();
+        getTanggalSekarang();
+        createCountDown();
 
         setUpBottomNav();
-
+        jsonParse();
     }
 
+    /*private void getJamSholat(){
+        ApiService apiService = ApiClient.getClient().create(ApiService.class);
+        Call<JadwalSholat> call = apiService.getJadwalSholat(namaKota);
+        Log.d("MainAct","Url : "+ call.getClass());
+
+        call.enqueue(new Callback<JadwalSholat>() {
+            @Override
+            public void onResponse(Call<JadwalSholat> call, Response<JadwalSholat> response) {
+                int status = response.body().getStatusCode();
+                if (status == 0){
+                    items = response.body().getItems();
+                    if (items != null){
+                        String subuh = items.get(0).getFajr();
+                        String dzuhur = items.get(0).getDhuhr();
+                        String ashar = items.get(0).getAsr();
+                        String maghrib = items.get(0).getMaghrib();
+                        String isyak = items.get(0).getIsha();
+                        tv_example.setText("Subuh : "+subuh+"\n"+
+                                "Dzuhur : "+dzuhur+"\n"+
+                                "Ashar : "+ashar+"\n"+
+                                "Maghrib : "+maghrib+"\n"+
+                                "Isyak : "+isyak+"\n");
+                    }
+                }else {
+                    Toast.makeText(getApplicationContext(),"Maaf terjadi kesalahan mohon refres ulang", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<JadwalSholat> call, Throwable t) {
+
+            }
+        });
+    }*/
+
+    /*private static List<JadwalSholat>fromJson(JSONArray array){
+        ArrayList<JadwalSholat> res = new ArrayList<>();
+        for (int i = 0; i<array.length();i++){
+            JSONObject jadwalSholat = array.getJSONObject(i);
+            jadwalSholat.
+        }
+
+
+        return
+    }*/
+
     private void jsonParse() {
-        String url = "https://api.myjson.com/bins/17882r";
+
+        url = "https://muslimsalat.com/"+namaKota+"/weekly.json";
+        Log.d("MainAct", "url:" + url);
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET, url, null,
                 new com.android.volley.Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat();
-
                         try {
-                            int code = response.getInt("code");
-                            if (code != 200){
-                                Toast.makeText(getApplicationContext(),"Data gagal di ambil",Toast.LENGTH_SHORT).show();
-                            }else {
-                                tv_example.setText("RESPON: "+response.toString());
-                                JSONObject data = response.getJSONObject("data");
-                                tv_example.setText("DATA: "+data.toString());
-                                JSONObject timings = data.getJSONObject("timings");
-                                tv_example.setText("TIMINGS : "+timings.toString());
-                                String intSubuh = timings.getString("Fajr");
-                                tv_example.setText("Subuh : "+intSubuh+"\n");
-                                String intDzuhur = timings.getString("Dhuhr");
-                                String intAshar = timings.getString("Asr");
-                                String intMaghrib = timings.getString("Maghrib");
-                                String intIsyak = timings.getString("Isha");
-                                String intImsak = timings.getString("Imsak");
-                                tv_example.setText("Subuh : "+intSubuh+"\n"+
-                                        "Dzuhur : "+intDzuhur+"\n"+
-                                        "Ashar : "+intAshar+"\n"+
-                                        "Maghrib : "+intMaghrib+"\n"+
-                                        "Isyak : "+intIsyak+"\n"+
-                                        "Imsyak : "+intImsak+"\n");
+                            int code = response.getInt("status_valid");
+                            if (code != 1) {
+
+                                Toast.makeText(getApplicationContext(), "Data gagal di ambil", Toast.LENGTH_SHORT).show();
+                            } else {
+                                JSONArray jsonArray = response.getJSONArray("items");
+                                for (int i = 0;i<jsonArray.length();i++){
+                                    JSONObject items = jsonArray.getJSONObject(i);
+                                    String date = items.getString("date_for");
+                                    tv_example.append(date+"\n");
+
+                                }
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -171,13 +193,14 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
+                Toast.makeText(getApplicationContext(),"Kesalahan pada jaringan , Mungkin server error",Toast.LENGTH_SHORT).show();
             }
         });
 
         requestQueue.add(request);
     }
 
-    private void setUpBottomNav(){
+    private void setUpBottomNav() {
         bottom_nav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -200,15 +223,9 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
     }
 
     private void tambahkurangHari() {
-        calendarDay = Calendar.getInstance(locale);
-        if (day == 0) {
-            getTanggalSekarang();
-            tanggal_hari_ini = dateFormat.format(calendarDay.getTime());
-        }else {
-            calendarDay.add(Calendar.DAY_OF_YEAR, day);
-            tanggal_hari_ini = dateFormat.format(calendarDay.getTime());
-        }
-
+        calendarDay.add(Calendar.DAY_OF_YEAR, day);
+        tanggal_hari_ini = dateFormat.format(calendarDay.getTime());
+        day = 0;
         tv_tanggal_dan_hari.setText(tanggal_hari_ini);
     }
 
@@ -216,21 +233,22 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
     private void getTanggalSekarang() {
         String countryCode = CountryCode.findByName(namaNegara).get(0).name();
         Locale new_Locale = new Locale(countryCode);
-        DateFormat new_dateFormat = DateFormat.getDateInstance(DateFormat.FULL, new_Locale);
         Calendar new_calendar = Calendar.getInstance(new_Locale);
-        valDate_or_timestamp = Long.toString( System.currentTimeMillis());
-        valBulan = new_calendar.get(Calendar.MONTH);
-        valTahun = new_calendar.get(Calendar.YEAR);
+        DateFormat new_dateFormat = DateFormat.getDateInstance(DateFormat.FULL, new_Locale);
         dateFormat = new_dateFormat;
         locale = new_Locale;
-        currentTime = new_calendar;
         calendar = new_calendar;
+        calendarDay = new_calendar;
         tanggal_hari_ini = new_dateFormat.format(new_calendar.getTime());
+        valDate_or_timestamp = calendar.get(Calendar.MONTH);
     }
 
-    private void createCountDown(int jam, int menit) {
-        calendar.set(Calendar.HOUR_OF_DAY, jam);
-        calendar.set(Calendar.MINUTE, menit);
+    private void createCountDown() {
+        calendar.set(Calendar.YEAR, 2019);
+        calendar.set(Calendar.MONTH, 5);
+        calendar.set(Calendar.DAY_OF_MONTH, 31);
+        calendar.set(Calendar.HOUR_OF_DAY, 4);
+        calendar.set(Calendar.MINUTE, 22);
         long waktu = calendar.getTimeInMillis() - System.currentTimeMillis();
         Log.d("MainAc", "CountdownTimmer Sebelum jalan: " + waktu);
         new CountDownTimer(waktu, 1000) {
@@ -255,9 +273,9 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
     private void getCurrentTime() {
         currentTime = Calendar.getInstance(locale);
         currentTime.getTime();
-        long jam = currentTime.get(Calendar.HOUR_OF_DAY);
-        long menit = currentTime.get(Calendar.MINUTE);
-        long detik = currentTime.get(Calendar.SECOND);
+        jam = currentTime.get(Calendar.HOUR_OF_DAY);
+        menit = currentTime.get(Calendar.MINUTE);
+        detik = currentTime.get(Calendar.SECOND);
         tv_jam_menit.setText(String.format(locale, "%01d:%02d", jam, menit));
         tv_detik.setText(String.format(locale, "%01d", detik));
     }
@@ -284,29 +302,6 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
         tv_lokasi.setText(namaKota + ", " + namaNegara);
     }
 
-
-    private void ambilJadwalSholat(){
-        Log.d("MainAct","ambilJadwalSholat");
-        if (valLat != null && valLon != null ){
-            Log.d("MainAct","ambilJadwalSholat running");
-            ApiService apiService = ApiClient.getClient().create(ApiService.class);
-            Call<Data> call = apiService.getJadwal(valDate_or_timestamp,valLat,valLon,8);
-            call.enqueue(new Callback<Data>() {
-                @Override
-                public void onResponse(Call<Data> call, Response<Data> response) {
-                    Log.d("Data ", " respon" + response.body().getDate());
-                }
-
-                @Override
-                public void onFailure(Call<Data> call, Throwable t) {
-                    Log.d("MainAct","ambilJadwalSholat gagal");
-                }
-            });
-        }
-        Log.d("MainAct","ambilJadwalSholat di batalkan");
-
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -322,14 +317,16 @@ public class MainAct extends AppCompatActivity implements View.OnClickListener {
                 }
                 break;
             case R.id.iv_tambah_hari:
-                day = day+1;
-                Log.d("MainAct","Tambah hari, day:"+day);
+                day += 1;
                 tambahkurangHari();
                 break;
             case R.id.iv_kurangi_hari:
-                day = day-1;
-                Log.d("MainAct","Kurangi hari, day:"+day);
+                day -= 1;
                 tambahkurangHari();
+                break;
+            case R.id.btn_back:
+            case R.id.btn_more:
+                onBackPressed();
                 break;
 
         }

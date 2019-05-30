@@ -136,7 +136,7 @@ public class HomeAct extends AppCompatActivity implements View.OnClickListener {
         Geocoder geocoder = new Geocoder(HomeAct.this, Locale.getDefault());
         try {
             List<Address> addresses = geocoder.getFromLocation(lat, lon, 1);
-            namaKota = addresses.get(0).getSubAdminArea();
+            namaKota = addresses.get(0).getLocality();
         } catch (IOException e) {
             e.printStackTrace();
         }

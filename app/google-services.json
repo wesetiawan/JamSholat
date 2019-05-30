@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "12019320921",
+    "firebase_url": "https://jam-sholat.firebaseio.com",
+    "project_id": "jam-sholat",
+    "storage_bucket": "jam-sholat.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:12019320921:android:fd579cff7bf91acb",
+        "android_client_info": {
+          "package_name": "dev.ws.jamsholat"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "12019320921-9soi9qild58im5b55ui35ujunjegkesh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dev.ws.jamsholat",
+            "certificate_hash": "8b4e0f637dbfc9d43b77a78f506f6af4de99a06a"
+          }
+        },
+        {
+          "client_id": "12019320921-gkh2b2rtm0kv322ehkvg4u2qtpb83j8v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7XB0KGoVS6Nk8CscBWm27lZ0tQofZH7k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "12019320921-gkh2b2rtm0kv322ehkvg4u2qtpb83j8v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
